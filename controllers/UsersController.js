@@ -1,10 +1,11 @@
 import sha1 from 'sha1';
+import jwt from 'jsonwebtoken';
 import { ObjectID } from 'mongodb';
 import dbClient from '../utils/db';
-import redisClient from '../utils/redis';
+import { isTokenBlacklisted } from './Blacklist';
 
 class UsersController {
-  static async postNew(request, response) {
+  static async registerUser(request, response) {
     const { email, password } = request.body;
     if (!email) return response.status(400).send({ error: 'Missing email' });
     if (!password) return response.status(400).send({ error: 'Missing password' });
@@ -25,20 +26,35 @@ class UsersController {
     });
   }
 
-  static async getMe(request, response) {
-    const token = request.header('X-Token');
-    const key = `auth_${token}`;
-    const userId = await redisClient.get(key);
-    if (!userId) {
-      response.status(401).json({ error: 'Unauthorized' });
+  static async getUser(request, response) {
+    try {
+      const token = request.header('X-Token');
+      if (!token) {
+        return response.status(401).json({ error: 'Unauthorized, missing token' });
+      }
+
+      if (isTokenBlacklisted(token)) {
+        return response.status(401).json({ error: 'Unauthorized, token is expired' });
+      }
+
+      const decoded = jwt.verify(token, process.env.SECRET_KEY || 'AUTH');
+      const userId = decoded.id;
+      if (!userId) {
+        return response.status(401).json({ error: 'Unauthorized' });
+      }
+      const users = dbClient.db.collection('users');
+      const idObj = new ObjectID(userId);
+      const user = await users.findOne({ _id: idObj });
+      if (!user) {
+        return response.status(401).json({ error: 'Unauthorized' });
+      }
+      return response.status(200).json({ id: userId, email: user.email });
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+        return response.status(401).json({ error: 'Token expired' });
+      }
+      return response.status(401).json({ error: 'Unauthorized, token verification failed' });
     }
-    const users = dbClient.db.collection('users');
-    const idObj = new ObjectID(userId);
-    const user = await users.findOne({ _id: idObj });
-    if (!user) {
-      return response.status(401).json({ error: 'Unauthorized' });
-    }
-    return response.status(200).json({ id: userId, email: user.email });
   }
 }
 
