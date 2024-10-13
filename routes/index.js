@@ -16,7 +16,7 @@ router.get('/users/get', UsersController.getUser);
 
 router.post('/notes', NotesController.createNote);
 router.get('/notes/:id', NotesController.readNote);
-router.put('/notes/:id', NotesController.updateNote);
-router.delete('/notes/:id', NotesController.deleteNote);
+// router.put('/notes/:id', NotesController.updateNote);
+// router.delete('/notes/:id', NotesController.deleteNote);
 
 export default router;
