@@ -1,8 +1,9 @@
 import sha1 from 'sha1';
 import jwt from 'jsonwebtoken';
-import { ObjectID } from 'mongodb';
-import dbClient from '../utils/db';
-import { isTokenBlacklisted } from './Blacklist';
+import mongodb from 'mongodb';
+const { ObjectID } = mongodb;
+import dbClient from '../utils/db.js';
+import { isTokenBlacklisted } from './Blacklist.js';
 
 class UsersController {
   static async registerUser(request, response) {

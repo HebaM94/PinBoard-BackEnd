@@ -1,5 +1,6 @@
-import { ObjectID } from 'mongodb';
-import dbClient from '../utils/db';
+import mongodb from 'mongodb';
+const { ObjectID } = mongodb;
+import dbClient from '../utils/db.js';
 
 class NotesController {
   static async createNote(request, response) {

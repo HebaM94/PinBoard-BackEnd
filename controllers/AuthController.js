@@ -1,7 +1,7 @@
 import sha1 from 'sha1';
 import jwt from 'jsonwebtoken';
-import dbClient from '../utils/db';
-import { blacklistToken } from './Blacklist';
+import dbClient from '../utils/db.js';
+import { blacklistToken } from './Blacklist.js';
 
 const secretKey = process.env.SECRET_KEY || 'AUTH';
 
