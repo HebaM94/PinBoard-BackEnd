@@ -1,4 +1,4 @@
-import dbClient from '../utils/db.js';
+import dbClient from '../utils/db';
 
 class AppController {
   static getStatus(_request, response) {
