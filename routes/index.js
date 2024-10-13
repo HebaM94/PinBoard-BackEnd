@@ -10,7 +10,7 @@ router.get('/stats', AppController.getStats);
 
 router.post('/users', UsersController.registerUser);
 
-router.get('/login', AuthController.loginUser);
+router.post('/login', AuthController.loginUser);
 router.get('/logout', AuthController.logoutUser);
 router.get('/users/get', UsersController.getUser);
 
