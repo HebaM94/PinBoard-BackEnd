@@ -8,15 +8,15 @@ const router = Router();
 router.get('/status', AppController.getStatus);
 router.get('/stats', AppController.getStats);
 
-router.post('/users', UsersController.registerUser);
+router.post('/register', UsersController.registerUser);
 
 router.post('/login', AuthController.loginUser);
 router.get('/logout', AuthController.logoutUser);
 router.get('/users/get', UsersController.getUser);
 
-router.post('/notes', NotesController.createNote);
-router.get('/notes/:id', NotesController.readNote);
-// router.put('/notes/:id', NotesController.updateNote);
-// router.delete('/notes/:id', NotesController.deleteNote);
+router.post('/notes', AuthController.authMiddleware, NotesController.createNote);
+router.get('/notes/:id', AuthController.authMiddleware, NotesController.readNote);
+router.put('/notes/:id', AuthController.authMiddleware, NotesController.updateNote);
+router.delete('/notes/:id', AuthController.authMiddleware, NotesController.deleteNote);
 
 export default router;

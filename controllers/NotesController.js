@@ -4,6 +4,9 @@ import dbClient from '../utils/db';
 class NotesController {
   static async createNote(request, response) {
     const { title, content } = request.body;
+    if (!title && !content) {
+      return response.status(400).json({ error: 'Either title or content must be provided to create the note' });
+    }
 
     const newNote = {
       title: title || 'Untitled',
@@ -22,6 +25,7 @@ class NotesController {
 
   static async readNote(request, response) {
     const { id } = request.params;
+
     if (!ObjectID.isValid(id)) {
       return response.status(400).json({ error: 'Invalid note ID' });
     }
@@ -39,7 +43,7 @@ class NotesController {
     }
   }
 
-  /* static async updateNote(request, response) {
+  static async updateNote(request, response) {
     const { id } = request.params;
     const { title, content } = request.body;
 
@@ -48,29 +52,29 @@ class NotesController {
     }
 
     if (!title && !content) {
-      return response.status(400).json({ error: 'Title or content must be provided to update' });
+      return response.status(400).json({ error: 'Either title or content must be updated to update the note' });
     }
 
-    const updatedData = {};
-    if (title) updatedData.title = title;
-    if (content) updatedData.content = content;
-    updatedData.updatedAt = new Date();
+    const updated = {};
+    if (title) updated.title = title;
+    if (content) updated.content = content;
+    updated.updatedAt = new Date();
+    
 
     try {
-      const result = await dbClient.db.collection('notes').updateOne(
+      const updatedNote = await dbClient.db.collection('notes').updateOne(
         { _id: ObjectID(id) },
-        { $set: updatedData },
+        { $set: updated },
       );
 
-      if (result.matchedCount === 0) {
+      if (updatedNote.matchedCount === 0) {
         return response.status(404).json({ error: 'Note not found' });
       }
 
-      response.status(200).json({ message: 'Note updated successfully' });
+      return response.status(200).json({ message: 'Note updated successfully' });
     } catch (error) {
-      response.status(500).json({ error: 'Could not update note' });
+      return response.status(500).json({ error: 'Could not update note' });
     }
-    return null;
   }
 
   static async deleteNote(request, response) {
@@ -87,12 +91,11 @@ class NotesController {
         return response.status(404).json({ error: 'Note not found' });
       }
 
-      response.status(200).json({ message: 'Note deleted successfully' });
+      return response.status(200).json({ message: 'Note deleted successfully' });
     } catch (error) {
-      response.status(500).json({ error: 'Could not delete note' });
+      return response.status(500).json({ error: 'Could not delete note' });
     }
-    return null;
-  } */
+  }
 }
 
 export default NotesController;

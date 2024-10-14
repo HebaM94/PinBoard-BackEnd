@@ -1,17 +1,12 @@
 import sha1 from 'sha1';
 import jwt from 'jsonwebtoken';
 import dbClient from '../utils/db';
-import { blacklistToken } from './Blacklist';
+import { blacklistToken, isTokenBlacklisted } from './Blacklist';
 
 const secretKey = process.env.SECRET_KEY || 'AUTH';
 
 class AuthController {
   static async loginUser(request, response) {
-    // const authHeader = request.header('Authorization');
-    // let authData = authHeader.split(' ')[1];
-    // const decData = Buffer.from(authData, 'base64');
-    // authData = decData.toString('ascii');
-    // const [uemail, password] = authData.split(':');
     const { userEmail, password } = request.body;
     console.log(userEmail, password);
     if (!userEmail || !password) {
@@ -21,22 +16,21 @@ class AuthController {
     const users = await dbClient.db.collection('users');
     const user = await users.findOne({ email: userEmail, password: hashedPassword });
 
-    console.log(!user);
     if (!user) {
       return response.status(401).json({ error: 'Unauthorized' });
     }
+
     const token = jwt.sign(
       { id: user._id.toString() },
       secretKey,
-      { expiresIn: '1min' },
+      { expiresIn: '15min' },
     );
 
     return response.status(200).json({ token });
   }
 
   static async logoutUser(request, response) {
-    const token = request.header('X-Token');
-    console.log(token);
+    const token = request.header('token');
     if (!token) {
       return response.status(401).json({ error: 'Unauthorized, missing token header' });
     }
@@ -50,14 +44,32 @@ class AuthController {
     }
   }
 
-  /* static async authMiddleware(req, res, next) {
-    // get token from header
-    // if no token respond
-    // if token expired, respond
-    // decode token
-    // add id to request
-    // cal next
-  } */
+  static async authMiddleware(request, response, next) {
+    const token = request.header('token');
+    if (!token) {
+      return response.status(401).json({ error: 'Unauthorized, missing token header' });
+    }
+    
+    try {
+    const decode = await jwt.verify(token, secretKey);
+    
+    if (isTokenBlacklisted(token) ) {
+      return response.status(401).json({ error: 'Unauthorized, invalid token' });
+    }
+
+    if (!decode) {
+      return response.status(401).json({ error: 'Unauthorized, invalid token' });
+    }
+    
+    request.userId = decode.id;
+    next();
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+        return response.status(401).json({ error: 'Token has expired' });
+      }
+      return response.status(401).json({ error: 'Invalid token' });
+    }
+  }
 }
 
 export default AuthController;

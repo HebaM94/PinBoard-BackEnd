@@ -28,7 +28,7 @@ class UsersController {
 
   static async getUser(request, response) {
     try {
-      const token = request.header('X-Token');
+      const token = request.header('token');
       if (!token) {
         return response.status(401).json({ error: 'Unauthorized, missing token' });
       }
