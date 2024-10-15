@@ -18,7 +18,7 @@ class AuthController {
     const user = await users.findOne({ email: userEmail, password: hashedPassword });
 
     if (!user) {
-      return response.status(401).json({ error: 'Unauthorized' });
+      return response.status(401).json({ error: 'Email or password is incorrect' });
     }
 
     const token = jwt.sign(
@@ -39,7 +39,7 @@ class AuthController {
     try {
       jwt.verify(token, secretKey);
       blacklistToken(token);
-      return response.status(204).json({ message: 'User logged out successfully' });
+      return response.status(200).json({ message: 'User logged out successfully' });
     } catch (error) {
       return response.status(401).json({ error: 'Unauthorized, invalid token' });
     }
