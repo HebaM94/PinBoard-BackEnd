@@ -6,9 +6,14 @@ import { isTokenBlacklisted } from './Blacklist';
 
 class UsersController {
   static async registerUser(request, response) {
-    const { email, password } = request.body;
+    const { username, email, password } = request.body;
+    if (!username) return response.status(400).send({ error: 'Missing username' });
     if (!email) return response.status(400).send({ error: 'Missing email' });
     if (!password) return response.status(400).send({ error: 'Missing password' });
+    const usernameUsed = await dbClient.db.collection('users').findOne({ username });
+    if (usernameUsed) {
+      return response.status(400).json({ error: 'Username is taken' });
+    }
     const userExists = await dbClient.db.collection('users').findOne({ email });
     if (userExists) {
       return response.status(400).json({ error: 'Already exist' });
@@ -16,11 +21,13 @@ class UsersController {
 
     const hashedPassword = sha1(password).toString();
     const newUser = await dbClient.db.collection('users').insertOne({
+      username,
       email,
       password: hashedPassword,
     });
 
     return response.status(201).json({
+      username,
       email,
       id: newUser.insertedId,
     });
