@@ -2,7 +2,9 @@ import sha1 from 'sha1';
 import jwt from 'jsonwebtoken';
 import { ObjectID } from 'mongodb';
 import dbClient from '../utils/db';
-import { isTokenBlacklisted } from './Blacklist';
+import { isTokenBlacklisted } from '../utils/Blacklist';
+
+const secretKey = process.env.SECRET_KEY || 'AUTH';
 
 class UsersController {
   static async registerUser(request, response) {
@@ -19,18 +21,38 @@ class UsersController {
       return response.status(400).json({ error: 'Already exist' });
     }
 
-    const hashedPassword = sha1(password).toString();
-    const newUser = await dbClient.db.collection('users').insertOne({
-      username,
-      email,
-      password: hashedPassword,
-    });
+    try {
+      const token = jwt.sign({ email }, secretKey, { expiresIn: '30min' });
+      const activationLink = `http://localhost:5000/activation/${token}`; // update localhost:5000 to the actual domain
+      const mailOptions = {
+        from: '"Pinboard Support" <no-reply@pinboard.com>',
+        to: email,
+        subject: 'Account activation',
+        html: `<p>Hello,</p>
+               <p>To activate your account click on the link below (Note: valid for 30 minutes): <br> <a href="${activationLink}">${activationLink}</a></p>
+               <p>Best regards,</p>`,
+      };
 
-    return response.status(201).json({
-      username,
-      email,
-      id: newUser.insertedId,
-    });
+      await sendEmail(mailOptions);
+
+      const hashedPassword = sha1(password).toString();
+      const newUser = await dbClient.db.collection('users').insertOne({
+        username,
+        email,
+        password: hashedPassword,
+      });
+
+      return response.status(201).json({
+        username,
+        email,
+        id: newUser.insertedId,
+      });
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+        return response.status(401).json({ error: 'Token has expired, please register again' });
+      }
+      return response.status(500).json({ error: 'Error creating user' });
+    }
   }
 
   static async getUser(request, response) {
