@@ -1,67 +1,102 @@
 # PinBoard Project - Backend Branch
 
 ## Overview
-The PinBoard project - Backend branch is a backend service designed to manage and store information for a pin board website. This branch focuses on the server-side logic, handling data storage, retrieval, and user authentication.
+The Pinboard project is a web application that allows users to create and manage notes. This back-end service is built using Node.js and Express, providing a RESTful API for the front-end to interact with.
+
 
 ## Table of Contents
-1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Contributing](#contributing)
-4. [License](#license)
-5. [Contact](#contact)
+1. [Technologies Used](#technologies-used)
+2. [Installation](#Installation)
+3. [Scripts](#scripts)
+4. [API Endpoints](#api-endpoints)
+5. [Features](#features)
+6. [License](#license)
+7. [Author](#author)
+
+
+## Technologies Used
+
+- **Languages**: JavaScript (Node.js)
+- **Frameworks**: 
+  - Express.js (for the server)
+- **Database**: 
+  - MongoDB (for data storage)
+- **Libraries**: 
+  - bcrypt (for password hashing)
+  - bull (for job and message queue)
+  - cors (for enabling CORS)
+  - dotenv (for environment variable management)
+  - jsonwebtoken (for authentication)
+  - nodemailer (for sending emails)
+  - uuid (for unique identifier generation)
+
 
 ## Installation
-1. Installation
+
 To set up the project locally, follow these steps:
 
     1- Clone the repository:
-        ```sh
+        ```bash
         git clone https://github.com/HebaM94/PinBoard-BackEnd.git
-        cd PinBoard-BackEnd
    
-   2- Install the dependencies:
+   2- Navigate to the project directory:
+
+        cd PinBoard-BackEnd
+
+   3- Install the dependencies:
 
         npm install
 
-    2- Set up the environment variables:
-        Create a .env file in the root directory and add the necessary environment variables. For example:
-
-        PORT=5000
-        DATABASE_URL=mongodb://localhost:27017/pinboard
-        JWT_SECRET=your_secret_key
 
     3- Start the development server:
 
         npm run dev
 
 
-## usage
-2. Usage
+## scripts
 
-After setting up the project, you can interact with the backend as follows:
+- Start the server:
 
     npm start
 
-## contributing
-3. Contributing
-We welcome contributions to the PinBoard project! If you would like to contribute, please follow these guidelines:
+-  Start the server in development mode:
 
-    1- Fork the repository.
-    2- Create a new branch for your feature or bug fix.
-    3- Make your changes and commit them.
-    4- Push your changes to your forked repository.
-    5- Create a pull request to the main repository.
+    npm run dev
 
-## license
-4. License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+- Lint the code:
 
-## contact
-5. Contact
+    npm run lint
+
+
+## API Endpoints
+
+- **POST /register**: Register a new user
+- **POST /login**: Login an existing user
+- **GET /users/get**: Get the current user
+- **PUT /forgot-password**: Send a temporary password to a user
+- **POST /reset-password**: Reset a user's password
+- **POST /notes**: Create a new note
+- **GET /notes**: Get all notes
+- **GET /notes/:id**: Read note specified with ID
+- **PUT /notes/:id**: Update note specified with ID
+- **DELETE /notes/:id**: Delete note specified with ID
+- **GET /logout**: Logout the user
+
+
+## Features
+- User registration and account activation
+- Password management with SHA-1
+- Email notifications using Nodemailer
+- User authentication using JWT
+
+
+## License
+
+This project is licensed under the ISC License.
+
+## Contact
 For any questions or inquiries, please contact:
 
     Heba Magdy
-    Email: hebamagde@gmail.com
     GitHub: HebaM94
 
-Feel free to customize this template according to your project's specific details and requirements.
