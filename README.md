@@ -23,12 +23,10 @@ The Pinboard project is a web application that allows users to create and manage
   - MongoDB (for data storage)
 - **Libraries**: 
   - bcrypt (for password hashing)
-  - bull (for job and message queue)
   - cors (for enabling CORS)
   - dotenv (for environment variable management)
   - jsonwebtoken (for authentication)
   - nodemailer (for sending emails)
-  - uuid (for unique identifier generation)
 
 
 ## Installation
@@ -36,6 +34,7 @@ The Pinboard project is a web application that allows users to create and manage
 To set up the project locally, follow these steps:
 
    1- Clone the repository:
+
         ```bash
         git clone https://github.com/HebaM94/PinBoard-BackEnd.git
    
