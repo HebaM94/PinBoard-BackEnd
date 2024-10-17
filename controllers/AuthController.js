@@ -25,7 +25,7 @@ class AuthController {
     const token = jwt.sign(
       { id: user._id.toString() },
       secretKey,
-      { expiresIn: '15min' }, // update expiry time once everything is completed
+      { expiresIn: '1h' }, // update expiry time once everything is completed
     );
 
     return response.status(200).json({ token });
@@ -119,7 +119,7 @@ class AuthController {
 
     try {
       const decode = await jwt.verify(token, secretKey);
-
+      console.log(token)
       if (isTokenBlacklisted(token)) {
         return response.status(401).json({ error: 'Unauthorized, invalid token' });
       }

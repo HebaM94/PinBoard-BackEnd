@@ -11,6 +11,7 @@ class NotesController {
     const newNote = {
       title: title || 'Untitled',
       content: content || '',
+      userId: request.userId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -23,6 +24,30 @@ class NotesController {
     }
   }
 
+
+  static async getNotes(request, response) {
+    // const { id } = request.params;
+
+    // if (!ObjectID.isValid(id)) {
+    //   return response.status(400).json({ error: 'Invalid note ID' });
+    // }
+
+    try {
+       await dbClient.db.collection('notes').find({ userId: request.userId }).toArray(function(err, result) {
+        console.log (result)
+        
+              if (!result) {
+                return response.status(404).json({ error: 'Note not found' });
+              }
+              return response.status(200).json({note:result});
+      });
+// console.log(note);
+
+    } catch (error) {
+//  console.log (error)
+      return response.status(500).json({ error: 'Could not retrieve note' });
+    }
+  }
   static async readNote(request, response) {
     const { id } = request.params;
 
@@ -59,7 +84,7 @@ class NotesController {
     if (title) updated.title = title;
     if (content) updated.content = content;
     updated.updatedAt = new Date();
-    
+
 
     try {
       const updatedNote = await dbClient.db.collection('notes').updateOne(
