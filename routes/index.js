@@ -23,5 +23,6 @@ router.get('/notes/:id', AuthController.authMiddleware, NotesController.readNote
 router.put('/notes/:id', AuthController.authMiddleware, NotesController.updateNote);
 router.delete('/notes/:id', AuthController.authMiddleware, NotesController.deleteNote);
 
+router.get('/activation/:token', UsersController.activateUser);
 
 export default router;

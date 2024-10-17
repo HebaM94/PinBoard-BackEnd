@@ -1,8 +1,11 @@
 import sha1 from 'sha1';
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import { ObjectID } from 'mongodb';
 import dbClient from '../utils/db';
 import { isTokenBlacklisted } from '../utils/Blacklist';
+import sendEmail from '../utils/nodemailer';
+
+
 
 const secretKey = process.env.SECRET_KEY || 'AUTH';
 
@@ -40,6 +43,7 @@ class UsersController {
         username,
         email,
         password: hashedPassword,
+        active: false,
       });
 
       return response.status(201).json({
@@ -84,6 +88,28 @@ class UsersController {
       }
       return response.status(401).json({ error: 'Unauthorized, token verification failed' });
     }
+  }
+
+  static async activateUser(request, response) {
+    const { token } = request.params;
+    console.log(token);
+    let decoded = {};
+    try {
+      decoded = jwt.verify(token, process.env.SECRET_KEY || 'AUTH');
+    } catch (error) {
+      console.log('TokenExpiredError');
+      return response.status(401).send('Token Expired');
+    }
+    const { email } = decoded;
+    console.log(decoded);
+    const users = dbClient.db.collection('users');
+    const user = await users.updateOne({ email }, { $set: { active: true } });
+    console.log(user.matchedCount, user.matchedCountmodifiedCount);
+    if (!(user.matchedCount && user.modifiedCount)) {
+      return response.status(400).send('Wrong token');
+    }
+
+    return response.status(200).send('User Activated');
   }
 }
 
