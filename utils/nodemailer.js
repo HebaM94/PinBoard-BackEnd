@@ -7,8 +7,8 @@ export default async function sendEmail(mailOptions) {
       port: 465, // Or 465 for SSL
       secure: false, // true for SSL
       auth: {
-        user: '650fe01f15a206',
-        pass: 'efceab0c3c45fd',
+        user: '68debc8f414fd8',
+        pass: '0521b7cc7e6dbf',
       },
     });
 
