@@ -6,7 +6,7 @@ class DBClient {
     const PORT = process.env.DB_PORT || 27017;
     const DATABASE = process.env.DB_DATABASE || 'pinboard';
     const url = `mongodb://${HOST}:${PORT}/${DATABASE}`;
-    this.client = new MongoClient(uri, { useUnifiedTopology: true });
+    this.client = new MongoClient(url, { useUnifiedTopology: true });
     this.client.connect().then(() => {
       this.db = this.client.db(DATABASE);
     }).catch((err) => {
