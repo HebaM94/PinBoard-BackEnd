@@ -16,7 +16,7 @@ class AuthController {
     }
     const hashedPassword = sha1(password);
     const users = await dbClient.db.collection('users');
-    const user = await users.findOne({ email, password: hashedPassword });
+    const user = await users.findOne({ email, password: hashedPassword, active: true });
 
     if (!user) {
       return response.status(401).json({ error: 'Email or password is incorrect' });
@@ -81,7 +81,7 @@ class AuthController {
 
       return response.status(200).json({ message: 'Temporary password sent to your email.' });
     } catch (err) {
-      return res.status(500).json({ error: 'Failed to send a temporary password' });
+      return response.status(500).json({ error: 'Failed to send a temporary password' });
     }
   }
 
@@ -118,8 +118,8 @@ class AuthController {
     }
 
     try {
+      console.log(token);
       const decode = await jwt.verify(token, secretKey);
-      console.log(token)
       if (isTokenBlacklisted(token)) {
         return response.status(401).json({ error: 'Unauthorized, invalid token' });
       }
@@ -132,6 +132,7 @@ class AuthController {
       next();
 
     } catch (err) {
+      console.log(err);
       if (err.name === 'TokenExpiredError') {
         return response.status(401).json({ error: 'Token has expired' });
       }
