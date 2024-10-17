@@ -3,7 +3,22 @@ import dbClient from '../utils/db';
 
 class NotesController {
   static async createNote(request, response) {
-    const { title, content } = request.body;
+    const {
+      color,
+      content,
+      contentColor,
+      contentFont,
+      image,
+      imageFile,
+      imageUrl,
+      isBold,
+      isItalic,
+      isTitleBold,
+      isTitleItalic,
+      title,
+      titleColor,
+      titleFont,
+    } = request.body;
     if (!title && !content) {
       return response.status(400).json({ error: 'Either title or content must be provided to create the note' });
     }
@@ -12,6 +27,19 @@ class NotesController {
       title: title || 'Untitled',
       content: content || '',
       userId: request.userId,
+      color,
+      contentColor,
+      contentFont,
+      image,
+      imageFile,
+      imageUrl,
+      isBold,
+      isItalic,
+      isTitleBold,
+      isTitleItalic,
+      titleColor,
+      titleFont,
+
       createdAt: new Date(),
       updatedAt: new Date(),
     };
