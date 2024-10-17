@@ -14,7 +14,6 @@
     "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.1.1",
-        "bull": "^3.29.3",
         "chai-http": "^4.3.0",
         "cors": "^2.8.5",
         "crypto-js": "^4.2.0",
@@ -24,10 +23,8 @@
         "handlebars": "^4.7.8",
         "image-thumbnail": "^1.0.17",
         "jsonwebtoken": "^9.0.2",
-        "mime-types": "^2.1.27",
         "mongodb": "^3.7.4",
         "nodemailer": "^6.9.15",
-        "redis": "^2.8.0",
         "sha1": "^1.1.1",
         "uuid": "^8.2.0"
     },

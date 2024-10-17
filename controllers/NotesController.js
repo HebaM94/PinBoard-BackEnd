@@ -24,7 +24,6 @@ class NotesController {
     }
   }
 
-
   static async getNotes(request, response) {
     // const { id } = request.params;
 
@@ -37,7 +36,7 @@ class NotesController {
         console.log (result)
         
               if (!result) {
-                return response.status(404).json({ error: 'Note not found' });
+                return response.status(404).json({ error: 'No found notes' });
               }
               return response.status(200).json({note:result});
       });
@@ -48,6 +47,7 @@ class NotesController {
       return response.status(500).json({ error: 'Could not retrieve note' });
     }
   }
+
   static async readNote(request, response) {
     const { id } = request.params;
 

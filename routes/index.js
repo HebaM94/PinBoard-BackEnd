@@ -18,9 +18,10 @@ router.put('/forgot-password', AuthController.forgotPassword);
 router.post('/reset-password', AuthController.resetPassword);
 
 router.post('/notes', AuthController.authMiddleware, NotesController.createNote);
+router.get('/notes', AuthController.authMiddleware, NotesController.getNotes);
 router.get('/notes/:id', AuthController.authMiddleware, NotesController.readNote);
 router.put('/notes/:id', AuthController.authMiddleware, NotesController.updateNote);
 router.delete('/notes/:id', AuthController.authMiddleware, NotesController.deleteNote);
 
-router.get('/notes', AuthController.authMiddleware, NotesController.getNotes);
+
 export default router;

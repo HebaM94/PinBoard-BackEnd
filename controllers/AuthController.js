@@ -130,6 +130,7 @@ class AuthController {
 
       request.userId = decode.id;
       next();
+
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
         return response.status(401).json({ error: 'Token has expired' });
