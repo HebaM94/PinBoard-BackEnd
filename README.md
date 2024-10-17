@@ -35,7 +35,7 @@ The Pinboard project is a web application that allows users to create and manage
 
 To set up the project locally, follow these steps:
 
-    1- Clone the repository:
+   1- Clone the repository:
         ```bash
         git clone https://github.com/HebaM94/PinBoard-BackEnd.git
    
@@ -48,24 +48,24 @@ To set up the project locally, follow these steps:
         npm install
 
 
-    3- Start the development server:
+   4- Start the development server:
 
         npm run dev
 
 
-## scripts
+## Scripts
 
 - Start the server:
 
-    npm start
+       npm start
 
 -  Start the server in development mode:
 
-    npm run dev
+       npm run dev
 
 - Lint the code:
 
-    npm run lint
+       npm run lint
 
 
 ## API Endpoints
@@ -84,6 +84,7 @@ To set up the project locally, follow these steps:
 
 
 ## Features
+
 - User registration and account activation
 - Password management with SHA-1
 - Email notifications using Nodemailer
@@ -94,9 +95,11 @@ To set up the project locally, follow these steps:
 
 This project is licensed under the ISC License.
 
+
 ## Contact
+
 For any questions or inquiries, please contact:
 
-    Heba Magdy
+    Author: Heba Magdy
     GitHub: HebaM94
 
