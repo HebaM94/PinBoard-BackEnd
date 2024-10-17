@@ -25,7 +25,7 @@ class AuthController {
     const token = jwt.sign(
       { id: user._id.toString() },
       secretKey,
-      { expiresIn: '1h' }, // update expiry time once everything is completed
+      { expiresIn: '2h' },
     );
 
     return response.status(200).json({ token });
